@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Войти — ИграСвет</title>
+<link rel="stylesheet" href="style.css"/>
+<script>(function(){ document.documentElement.setAttribute('data-theme', localStorage.getItem('igrasvet_theme')||'classic'); })();</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="logo">
+      <span class="logo-icon">♟</span>
+      <span class="logo-text">ИграСвет</span>
+    </a>
+    <div class="header-right">
+      <div id="auth-nav-slot"></div>
+      <button id="theme-btn" class="theme-btn" onclick="toggleTheme()">🌃 Неон</button>
+    </div>
+  </div>
+</header>
+
+<div id="nav-wrapper">
+  <nav class="main-nav">
+    <div class="nav-inner">
+      <button class="nav-hamburger" onclick="toggleMobileNav()">☰</button>
+    </div>
+    <ul>
+      <li><a href="index.html">Главная</a></li>
+      <li><a href="games.html">Каталог игр</a></li>
+      <li><a href="search.html">Найти игру</a></li>
+      <li><a href="slang.html">Словарь сленга</a></li>
+      <li><a href="about.html">О нас</a></li>
+      <li><a href="contacts.html">Контакты</a></li>
+    </ul>
+  </nav>
+</div>
+
+<main class="auth-page">
+  <div class="auth-card reveal">
+    <div class="auth-logo">♟ ИграСвет</div>
+    <p class="auth-sub" id="auth-sub">Войдите, чтобы добавлять игры и вести личную библиотеку</p>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchTab('login')">Войти</button>
+      <button class="auth-tab" onclick="switchTab('register')">Регистрация</button>
+    </div>
+
+    <div id="auth-error" class="auth-error"></div>
+
+    <!-- LOGIN -->
+    <div id="tab-login">
+      <div class="form-group">
+        <label>Имя пользователя</label>
+        <input type="text" id="login-username" placeholder="username" autocomplete="username"/>
+      </div>
+      <div class="form-group">
+        <label>Пароль</label>
+        <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password"/>
+      </div>
+      <button class="btn-main" style="width:100%;justify-content:center;" onclick="doLogin()">Войти →</button>
+      <p class="auth-hint">Нет аккаунта? <a href="#" onclick="switchTab('register');return false">Зарегистрируйтесь</a></p>
+      <p class="auth-hint" style="margin-top:8px;">Демо-вход: <b>admin</b> / <b>admin123</b></p>
+    </div>
+
+    <!-- REGISTER -->
+    <div id="tab-register" style="display:none">
+      <div class="form-group">
+        <label>Имя пользователя <span style="color:var(--muted);font-size:11px;">(мин. 3 символа)</span></label>
+        <input type="text" id="reg-username" placeholder="username" autocomplete="username"/>
+      </div>
+      <div class="form-group">
+        <label>Отображаемое имя</label>
+        <input type="text" id="reg-display" placeholder="Ваш никнейм"/>
+      </div>
+      <div class="form-group">
+        <label>Электронная почта <span style="color:var(--muted);font-size:11px;">(будет подставляться в форму контактов)</span></label>
+        <input type="email" id="reg-email" placeholder="ivan@example.ru" autocomplete="email"/>
+      </div>
+      <div class="form-group">
+        <label>Пароль <span style="color:var(--muted);font-size:11px;">(мин. 4 символа)</span></label>
+        <input type="password" id="reg-password" placeholder="••••••••" autocomplete="new-password"/>
+      </div>
+      <div class="form-group">
+        <label>Подтверждение пароля</label>
+        <input type="password" id="reg-confirm" placeholder="••••••••" autocomplete="new-password"/>
+      </div>
+      <button class="btn-main" style="width:100%;justify-content:center;" onclick="doRegister()">Создать аккаунт →</button>
+      <p class="auth-hint">Уже есть аккаунт? <a href="#" onclick="switchTab('login');return false">Войдите</a></p>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-bottom"><p>© 2025 ИграСвет. Все права защищены.</p></div>
+</footer>
+
+<script src="db.js"></script>
+<script src="shared.js"></script>
+<script>
+  updateThemeBtn();
+  initScrollReveal();
+
+  // Уже вошли — редирект
+  if (DB.isLoggedIn()) location.href = 'index.html';
+
+  // Enter-клавиша
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      if (document.getElementById('tab-login').style.display !== 'none') doLogin();
+      else doRegister();
+    }
+  });
+
+  function switchTab(tab) {
+    const tabs = document.querySelectorAll('.auth-tab');
+    tabs[0].classList.toggle('active', tab === 'login');
+    tabs[1].classList.toggle('active', tab === 'register');
+    document.getElementById('tab-login').style.display    = tab === 'login' ? 'block' : 'none';
+    document.getElementById('tab-register').style.display = tab === 'register' ? 'block' : 'none';
+    clearError();
+  }
+
+  function showError(msg) {
+    const e = document.getElementById('auth-error');
+    e.textContent = msg;
+    e.classList.add('visible');
+  }
+  function clearError() {
+    const e = document.getElementById('auth-error');
+    e.textContent = '';
+    e.classList.remove('visible');
+  }
+
+  function doLogin() {
+    clearError();
+    const username = document.getElementById('login-username').value.trim();
+    const password = document.getElementById('login-password').value;
+    if (!username || !password) { showError('Заполните все поля'); return; }
+    const res = DB.login(username, password);
+    if (!res.ok) { showError(res.error); return; }
+    const redirect = new URLSearchParams(location.search).get('from') || 'index.html';
+    location.href = redirect;
+  }
+
+  function doRegister() {
+    clearError();
+    const username = document.getElementById('reg-username').value.trim();
+    const display  = document.getElementById('reg-display').value.trim() || username;
+    const email    = document.getElementById('reg-email').value.trim();
+    const password = document.getElementById('reg-password').value;
+    const confirm  = document.getElementById('reg-confirm').value;
+    if (!username || !password) { showError('Заполните все обязательные поля'); return; }
+    if (password !== confirm)   { showError('Пароли не совпадают'); return; }
+    const res = DB.register(username, password, display, email);
+    if (!res.ok) { showError(res.error); return; }
+    // Авто-вход после регистрации
+    DB.login(username, password);
+    location.href = 'index.html';
+  }
+</script>
+</body>
+</html>

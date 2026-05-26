@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>ИграСвет — О нас</title>
+<link rel="stylesheet" href="style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Lora:ital,wght@0,400;0,600;1,400&family=Orbitron:wght@600;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+<script>(function(){ document.documentElement.setAttribute('data-theme', localStorage.getItem('igrasvet_theme')||'classic'); })();</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="logo"><span class="logo-icon">♟</span><span class="logo-text">ИграСвет</span></a>
+    <div class="header-right">
+      <div class="header-contacts">
+        <span>📞 8 (963) 538-85-86</span>
+        <span>✉ Fufufuuffyo@gmail.com</span>
+        
+      </div>
+      <div id="auth-nav-slot" style="position:relative;"></div>
+      <button id="theme-btn" class="theme-btn" onclick="toggleTheme()">🌃 Неон</button>
+    </div>
+  </div>
+</header>
+
+<div id="nav-wrapper">
+<nav class="main-nav">
+  <div class="nav-inner">
+    <button class="nav-hamburger" onclick="toggleMobileNav()" aria-label="Меню">☰</button>
+  </div>
+  <ul>
+      <li><a href="index.html">Главная</a></li>
+      <li><a href="games.html">Каталог игр</a></li>
+      <li><a href="search.html">Найти игру</a></li>
+      <li><a href="slang.html">Словарь сленга</a></li>
+      <li><a href="about.html">О нас</a></li>
+      <li><a href="contacts.html">Контакты</a></li>
+    </ul>
+</nav>
+</div>
+
+<main>
+  <section class="page-hero">
+    <h1 class="reveal">О нас</h1>
+    <p class="page-sub">Кто мы и зачем создали этот сайт</p>
+  </section>
+
+  <section class="about-content">
+    <div class="about-grid">
+      <div class="about-text">
+        <h2>Наша история</h2>
+        <p>«ИграСвет» появился из простой идеи: рассказывать о видеоиграх так, как их объясняет хороший друг. Без фраз вроде «хардкорный рогалик с процедурной генерацией», а просто и по-человечески.</p>
+        <p>Мы заметили, что многие хотят понять мир игр — будь то родители, чьи дети часами сидят за компьютером, или взрослые, впервые взявшие в руки геймпад. Но интернет встречает их потоком непонятных слов.</p>
+        <p>В третьей версии сайта появился искусственный интеллект, который автоматически находит информацию о любой игре и сохраняет её. Можно загружать скриншоты, ставить оценки, писать заметки и добавлять игры вручную. Всё это хранится прямо в браузере.</p>
+      </div>
+      <div class="about-visual">
+        <div class="about-card"><div class="big-num" id="st-total">0</div><p>игр в базе</p></div>
+        <div class="about-card"><div class="big-num" id="st-screens">0</div><p>скриншотов загружено</p></div>
+        <div class="about-card"><div class="big-num">0</div><p>непонятных слов на сайте</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="values-section">
+    <h2 class="section-title">Наши принципы</h2>
+    <div class="values-grid">
+      <div class="value-item">
+        <div class="value-num">01</div>
+        <h3>Ясность</h3>
+        <p>Пишем так, чтобы было понятно тому, кто никогда не играл. Никакого жаргона — только живой язык.</p>
+      </div>
+      <div class="value-item">
+        <div class="value-num">02</div>
+        <h3>Автоматизация</h3>
+        <p>ИИ сам находит информацию о любой игре и сохраняет её в базу без лишних кликов.</p>
+      </div>
+      <div class="value-item">
+        <div class="value-num">03</div>
+        <h3>Две темы</h3>
+        <p>Классический тёплый редакционный стиль и неоновый ночной — переключайте в любой момент.</p>
+      </div>
+      <div class="value-item">
+        <div class="value-num">04</div>
+        <h3>Ваш вклад</h3>
+        <p>Скриншоты, оценки, заметки, ручное добавление — сайт становится вашим личным каталогом.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="team-section">
+    <h2 class="section-title">Команда</h2>
+    <div class="team-grid">
+      <div class="team-card"><span class="team-avatar">👨‍💻</span><h3>Антон Саларев Сергеевич</h3><span class="team-role">Студент 831 группы</span><p>Студент специальности «Информационные системы и программирование». Разработчик сайта.</p></div>
+      <div class="team-card"><span class="team-avatar">👩‍🎨</span><h3>Мария Соколова</h3><span class="team-role">Редактор</span><p>Бывший учитель русского языка. Следит, чтобы тексты были понятными и грамотными.</p></div>
+      <div class="team-card"><span class="team-avatar">🤖</span><h3>ИИ-помощник</h3><span class="team-role">Автоматический поиск</span><p>Умеет рассказывать о любой игре простым языком и работает круглосуточно.</p></div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-col"><div class="footer-logo">♟ ИграСвет</div><p>Сайт о видеоиграх простым языком.</p></div>
+    <div class="footer-col">
+      <h4>Навигация</h4>
+      <ul>
+      <li><a href="index.html">Главная</a></li>
+      <li><a href="games.html">Каталог игр</a></li>
+      <li><a href="search.html">Найти игру</a></li>
+      <li><a href="slang.html">Словарь сленга</a></li>
+      <li><a href="about.html">О нас</a></li>
+      <li><a href="contacts.html">Контакты</a></li>
+    </ul>
+    </div>
+    <div class="footer-col"><h4>Контакты</h4><p>📞 8 (963) 538-85-86</p><p>✉ Fufufuuffyo@gmail.com</p><p>📍 Москва, ул. Игровая, д. 1</p></div>
+    <div class="footer-col"><h4>Юридическое</h4><p>ООО «ИграСвет»<br/>ИНН: 7700000001<br/>ОГРН: 1234567890123</p><p><a href="#">Политика конфиденциальности</a></p></div>
+  </div>
+  <div class="footer-bottom"><p>© 2025 ИграСвет. Все права защищены.</p></div>
+</footer>
+
+<script src="db.js"></script>
+<script src="shared.js"></script>
+<script>
+  updateThemeBtn();
+  const stats = DB.getStats();
+  el('st-total').textContent   = stats.total;
+  el('st-screens').textContent = stats.screens;
+</script>
+</body>
+</html>

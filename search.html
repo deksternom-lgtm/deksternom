@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>ИграСвет — Найти игру</title>
+<link rel="stylesheet" href="style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Lora:ital,wght@0,400;0,600;1,400&family=Orbitron:wght@600;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+<script>(function(){ document.documentElement.setAttribute('data-theme', localStorage.getItem('igrasvet_theme')||'classic'); })();</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="logo"><span class="logo-icon">♟</span><span class="logo-text">ИграСвет</span></a>
+    <div class="header-right">
+      <div class="header-contacts">
+        <span>📞 8 (963) 538-85-86</span>
+        <span>✉ Fufufuuffyo@gmail.com</span>
+        
+      </div>
+      <div id="auth-nav-slot" style="position:relative;"></div>
+      <button id="theme-btn" class="theme-btn" onclick="toggleTheme()">🌃 Неон</button>
+    </div>
+  </div>
+</header>
+
+<div id="nav-wrapper">
+<nav class="main-nav">
+  <div class="nav-inner">
+    <button class="nav-hamburger" onclick="toggleMobileNav()" aria-label="Меню">☰</button>
+  </div>
+  <ul>
+      <li><a href="index.html">Главная</a></li>
+      <li><a href="games.html">Каталог игр</a></li>
+      <li><a href="search.html">Найти игру</a></li>
+      <li><a href="slang.html">Словарь сленга</a></li>
+      <li><a href="about.html">О нас</a></li>
+      <li><a href="contacts.html">Контакты</a></li>
+    </ul>
+</nav>
+</div>
+
+<main>
+  <section class="page-hero">
+    <h1 class="reveal">Найти игру</h1>
+    <p class="page-sub">Введите название — мы откроем страницу игры на проверенном сайте</p>
+  </section>
+
+  <section class="search-section">
+
+    <!-- ПОИСК -->
+    <div>
+      <!-- ПЕРЕКЛЮЧАТЕЛЬ РЕЖИМА -->
+      <div class="search-mode-tabs">
+        <button class="search-mode-btn active" id="mode-byrutgame" onclick="setMode('byrutgame')">
+          🎮 Поиск на ByrutGame
+        </button>
+        <button class="search-mode-btn" id="mode-google" onclick="setMode('google')">
+          🔍 Поиск в Google
+        </button>
+      </div>
+
+      <div class="search-box" style="margin-top:14px;">
+        <input type="text" id="game-input" placeholder="Например: Hollow Knight, Stardew Valley, Portal…" autocomplete="off"/>
+        <button id="search-btn" onclick="searchGame()">
+          <span id="btn-text">Найти игру</span>
+        </button>
+      </div>
+
+      <div id="hint-byrutgame" class="search-hint">
+        🔎 Откроем страницу игры на <strong>ByrutGame</strong> — там всё простым языком, без сленга.
+      </div>
+      <div id="hint-google" class="search-hint" style="display:none;">
+        🌐 Откроем <strong>Google Поиск</strong> по названию игры — обзоры, прохождения, цены, новости.
+      </div>
+
+      <div class="quick-examples" style="margin-top:14px;">
+        Быстрый выбор:
+        <span class="example-tag" onclick="quickSearch('Minecraft',this)">Minecraft</span>
+        <span class="example-tag" onclick="quickSearch('GTA 5',this)">GTA 5</span>
+        <span class="example-tag" onclick="quickSearch('The Witcher 3',this)">The Witcher 3</span>
+        <span class="example-tag" onclick="quickSearch('Тетрис',this)">Тетрис</span>
+        <span class="example-tag" onclick="quickSearch('FIFA 24',this)">FIFA 24</span>
+        <span class="example-tag" onclick="quickSearch('Cyberpunk 2077',this)">Cyberpunk 2077</span>
+        <span class="example-tag" onclick="quickSearch('Elden Ring',this)">Elden Ring</span>
+        <span class="example-tag" onclick="quickSearch('Hogwarts Legacy',this)">Hogwarts Legacy</span>
+      </div>
+    </div>
+
+    <!-- БЛОК ПОДДЕРЖКИ -->
+    <div class="support-box" style="margin-top:36px;">
+      <div class="support-icon">💬</div>
+      <div class="support-content">
+        <h3>Не нашли что искали?</h3>
+        <p>Напишите нам — администратор ответит и поможет разобраться.</p>
+        <a href="mailto:Fufufuuffyo@gmail.com?subject=Вопрос об игре&body=Здравствуйте! Я ищу информацию об игре: " class="support-mail-btn">
+          ✉️ Написать администратору
+        </a>
+        <p class="support-note">Отвечаем в течение одного рабочего дня</p>
+      </div>
+    </div>
+
+  </section>
+</main>
+
+
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-col">
+      <div class="footer-logo">♟ ИграСвет</div>
+      <p>Сайт о видеоиграх простым языком. Для всех, кто хочет понять мир игр.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Навигация</h4>
+      <ul>
+      <li><a href="index.html">Главная</a></li>
+      <li><a href="games.html">Каталог игр</a></li>
+      <li><a href="search.html">Найти игру</a></li>
+      <li><a href="slang.html">Словарь сленга</a></li>
+      <li><a href="about.html">О нас</a></li>
+      <li><a href="contacts.html">Контакты</a></li>
+    </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Контакты</h4>
+      <p>📞 8 (963) 538-85-86</p>
+      <p>✉ Fufufuuffyo@gmail.com</p>
+      <p>📍 Москва, ул. Игровая, д. 1</p>
+    </div>
+    <div class="footer-col">
+      <h4>Юридическое</h4>
+      <p>ООО «ИграСвет»<br/>ИНН: 7700000001<br/>ОГРН: 1234567890123</p>
+      <p><a href="#">Политика конфиденциальности</a></p>
+      <p><a href="#">Условия использования</a></p>
+    </div>
+  </div>
+  <div class="footer-bottom"><p>© 2025 ИграСвет. Все права защищены.</p></div>
+</footer>
+
+<script src="shared.js"></script>
+<script>
+// ══ СОСТОЯНИЕ ═══════════════════════════════════════════════════
+let activeTag = null;
+let searchMode = 'byrutgame'; // 'byrutgame' | 'google'
+
+updateThemeBtn();
+
+// ══ РЕЖИМ ПОИСКА ════════════════════════════════════════════════
+
+function setMode(mode) {
+  searchMode = mode;
+  document.getElementById('mode-byrutgame').classList.toggle('active', mode === 'byrutgame');
+  document.getElementById('mode-google').classList.toggle('active', mode === 'google');
+  document.getElementById('hint-byrutgame').style.display = mode === 'byrutgame' ? 'block' : 'none';
+  document.getElementById('hint-google').style.display    = mode === 'google'    ? 'block' : 'none';
+  el('btn-text').textContent = mode === 'google' ? 'Найти в Google' : 'Найти игру';
+}
+
+// ══ ПОИСК ═══════════════════════════════════════════════════════
+
+function quickSearch(name, tagEl) {
+  if (activeTag) activeTag.classList.remove('active');
+  activeTag = tagEl;
+  tagEl.classList.add('active');
+  el('game-input').value = name;
+  searchGame();
+}
+
+function searchGame() {
+  const name = el('game-input').value.trim();
+  if (!name) { alert('Введите название игры'); return; }
+
+  let url;
+  if (searchMode === 'google') {
+    url = `https://www.google.com/search?q=${encodeURIComponent(name + ' игра')}`;
+  } else {
+    url = `https://byrutgame.org/?s=${encodeURIComponent(name)}`;
+  }
+  window.open(url, '_blank', 'noopener');
+}
+
+// ══ ИНИЦИАЛИЗАЦИЯ ════════════════════════════════════════════════
+
+const params = new URLSearchParams(window.location.search);
+if (params.get('q')) {
+  el('game-input').value = params.get('q');
+  searchGame();
+}
+
+el('game-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    if (activeTag) { activeTag.classList.remove('active'); activeTag = null; }
+    searchGame();
+  }
+});
+el('game-input').addEventListener('input', () => {
+  if (activeTag) { activeTag.classList.remove('active'); activeTag = null; }
+});
+</script>
+</body>
+</html>

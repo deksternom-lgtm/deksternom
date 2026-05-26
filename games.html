@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>ИграСвет — Каталог игр</title>
+<link rel="stylesheet" href="style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Lora:ital,wght@0,400;0,600;1,400&family=Orbitron:wght@600;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+<script>(function(){ document.documentElement.setAttribute('data-theme', localStorage.getItem('igrasvet_theme')||'classic'); })();</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="logo"><span class="logo-icon">♟</span><span class="logo-text">ИграСвет</span></a>
+    <div class="header-right">
+      <div class="header-contacts">
+        <span>📞 8 (963) 538-85-86</span>
+        <span>✉ Fufufuuffyo@gmail.com</span>
+        
+      </div>
+      <div id="auth-nav-slot" style="position:relative;"></div>
+      <button id="theme-btn" class="theme-btn" onclick="toggleTheme()">🌃 Неон</button>
+    </div>
+  </div>
+</header>
+
+<div id="nav-wrapper">
+<nav class="main-nav">
+  <div class="nav-inner">
+    <button class="nav-hamburger" onclick="toggleMobileNav()" aria-label="Меню">☰</button>
+  </div>
+  <ul>
+      <li><a href="index.html">Главная</a></li>
+      <li><a href="games.html">Каталог игр</a></li>
+      <li><a href="search.html">Найти игру</a></li>
+      <li><a href="slang.html">Словарь сленга</a></li>
+      <li><a href="about.html">О нас</a></li>
+      <li><a href="contacts.html">Контакты</a></li>
+    </ul>
+</nav>
+</div>
+
+<main>
+  <section class="page-hero">
+    <h1 class="reveal">Каталог игр</h1>
+    <p class="page-sub">Все игры, которые есть в базе — с рейтингом, фильтрами и скриншотами</p>
+  </section>
+
+  <section class="catalog-section">
+
+    <!-- СТАТИСТИКА -->
+    <div class="stats-bar" id="stats-bar">
+      <div class="stat-card"><div class="stat-num" id="st-total">0</div><div class="stat-label">игр в базе</div></div>
+      <div class="stat-card"><div class="stat-num" id="st-screens">0</div><div class="stat-label">скриншотов</div></div>
+      <div class="stat-card"><div class="stat-num" id="st-rated">0</div><div class="stat-label">с оценкой</div></div>
+      <div class="stat-card"><div class="stat-num" id="st-genres">0</div><div class="stat-label">жанров</div></div>
+    </div>
+
+    <!-- ФИЛЬТРЫ -->
+    <div class="genres-grid" id="genre-filter" style="margin-bottom:20px;">
+      <div class="genre-pill active" data-genre="">🎮 Все</div>
+      <div class="genre-pill" data-genre="экшен">💥 Экшен</div>
+      <div class="genre-pill" data-genre="ролевая">⚔️ Ролевые</div>
+      <div class="genre-pill" data-genre="стратегия">🏰 Стратегии</div>
+      <div class="genre-pill" data-genre="головоломка">🧩 Головоломки</div>
+      <div class="genre-pill" data-genre="аркада">🕹 Аркады</div>
+      <div class="genre-pill" data-genre="гонки">🏎 Гонки</div>
+      <div class="genre-pill" data-genre="спорт">⚽ Спорт</div>
+      <div class="genre-pill" data-genre="ужасы">👻 Ужасы</div>
+      <div class="genre-pill" data-genre="приключения">🌍 Приключения</div>
+      <div class="genre-pill" data-genre="песочница">🏖 Песочница</div>
+    </div>
+
+    <!-- ПОИСК И СОРТИРОВКА -->
+    <div class="catalog-controls" style="margin-bottom:28px;">
+      <input class="catalog-search" id="catalog-q" type="text" placeholder="Поиск по названию или жанру…" oninput="renderDebounced()"/>
+      <select class="catalog-select" id="catalog-sort" onchange="render()">
+        <option value="new">Сначала новые</option>
+        <option value="old">Сначала старые</option>
+        <option value="name">По алфавиту</option>
+        <option value="rating">По рейтингу</option>
+        <option value="screens">По скриншотам</option>
+      </select>
+    </div>
+
+    <!-- ТОП ПО РЕЙТИНГУ -->
+    <div id="top-section" style="margin-bottom:48px;display:none;">
+      <h2 class="section-title">🏆 Лучшие по вашей оценке</h2>
+      <div id="top-grid" class="games-grid"></div>
+    </div>
+
+    <!-- КАТАЛОГ -->
+    <h2 class="section-title" id="catalog-heading">Все игры</h2>
+    <div id="catalog-grid" class="games-grid"></div>
+
+  </section>
+</main>
+
+<!-- МОДАЛЬНОЕ ОКНО ДОБАВЛЕНИЯ -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalOnBg(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Добавить игру вручную</h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group full"><label>Название игры *</label><input type="text" id="m-name" placeholder="Например: Portal 2"/></div>
+        <div class="form-group"><label>Жанр</label><input type="text" id="m-genre" placeholder="Головоломка / Платформер"/></div>
+        <div class="form-group"><label>Год</label><input type="text" id="m-year" placeholder="2011"/></div>
+        <div class="form-group full"><label>Платформы</label><input type="text" id="m-platform" placeholder="ПК, PlayStation 3, Xbox 360"/></div>
+        <div class="form-group full"><label>Что это такое *</label><textarea id="m-summary" rows="3" placeholder="Краткое описание простым языком…"></textarea></div>
+        <div class="form-group full"><label>Чем нужно заниматься</label><textarea id="m-gameplay" rows="2" placeholder="Что делает игрок…"></textarea></div>
+        <div class="form-group full"><label>Кому подойдёт</label><textarea id="m-audience" rows="2" placeholder="Для кого эта игра…"></textarea></div>
+        <div class="form-group full"><label>Почему стоит попробовать</label><textarea id="m-why" rows="2" placeholder="Главные достоинства…"></textarea></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal()">Отмена</button>
+      <button class="btn-submit" onclick="submitModal()">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- FAB -->
+<button class="fab" onclick="openModal()">+ Добавить игру</button>
+
+<!-- МОДАЛКА ИГРЫ + КОММЕНТАРИИ -->
+<div class="modal-overlay" id="gm-overlay" onclick="closeGmOnBg(event)">
+  <div class="modal gm-modal">
+    <div class="modal-header">
+      <h2 id="gm-title"></h2>
+      <button class="modal-close" onclick="closeGameModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="gm-tags">
+        <span class="tag" id="gm-genre"></span>
+        <span class="tag tag-year" id="gm-year"></span>
+        <span class="tag tag-platform" id="gm-platform"></span>
+      </div>
+
+      <!-- КНОПКА ИГРАТЬ ОНЛАЙН -->
+      <div id="gm-play-block" style="display:none; margin-bottom:16px;">
+        <button class="gm-play-btn" id="gm-play-btn" onclick="togglePlay()">
+          ▶ Играть прямо здесь
+        </button>
+        <a id="gm-play-link" href="#" target="_blank" rel="noopener" class="gm-play-link">
+          🔗 Открыть в новой вкладке
+        </a>
+      </div>
+      <!-- ВСТРОЕННЫЙ ПЛЕЕР -->
+      <div id="gm-player-wrap" style="display:none; margin-bottom:20px; border-radius:12px; overflow:hidden; background:#000; position:relative;">
+        <iframe id="gm-player-frame"
+          src=""
+          width="100%" height="500"
+          style="border:none; display:block;"
+          allow="fullscreen; autoplay"
+          loading="lazy">
+        </iframe>
+        <button onclick="togglePlay()" style="position:absolute;top:8px;right:8px;background:rgba(0,0,0,.65);color:#fff;border:none;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:13px;">✕ Закрыть</button>
+      </div>
+      <div class="result-block" id="gm-s-block"><h3>🗒 Что это такое</h3><p id="gm-summary"></p></div>
+      <div class="result-block" id="gm-g-block"><h3>🎯 Чем нужно заниматься</h3><p id="gm-gameplay"></p></div>
+      <div class="result-block" id="gm-a-block"><h3>👥 Кому подойдёт</h3><p id="gm-audience"></p></div>
+      <div class="result-block" id="gm-w-block"><h3>⭐ Почему стоит попробовать</h3><p id="gm-why"></p></div>
+
+      <!-- КОММЕНТАРИИ -->
+      <div class="comments-section">
+        <h3 class="comments-title">💬 Комментарии</h3>
+        <div class="comments-list" id="gm-comments-list"></div>
+        <div class="comment-form">
+          <textarea id="gm-comment-input" class="comment-input" rows="3"
+            placeholder="Напишите ваш комментарий об игре…"></textarea>
+          <button class="comment-submit-btn" onclick="submitComment()">Отправить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-col">
+      <div class="footer-logo">♟ ИграСвет</div>
+      <p>Сайт о видеоиграх простым языком.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Навигация</h4>
+      <ul>
+      <li><a href="index.html">Главная</a></li>
+      <li><a href="games.html">Каталог игр</a></li>
+      <li><a href="search.html">Найти игру</a></li>
+      <li><a href="slang.html">Словарь сленга</a></li>
+      <li><a href="about.html">О нас</a></li>
+      <li><a href="contacts.html">Контакты</a></li>
+    </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Контакты</h4>
+      <p>📞 8 (963) 538-85-86</p>
+      <p>✉ Fufufuuffyo@gmail.com</p>
+    </div>
+    <div class="footer-col">
+      <h4>Юридическое</h4>
+      <p>ООО «ИграСвет»<br/>ИНН: 7700000001</p>
+      <p><a href="#">Политика конфиденциальности</a></p>
+    </div>
+  </div>
+  <div class="footer-bottom"><p>© 2025 ИграСвет. Все права защищены.</p></div>
+</footer>
+
+<script src="db.js"></script>
+<script src="shared.js"></script>
+<script>
+updateThemeBtn();
+
+let activeGenre = '';
+let _renderTimer = null;
+function renderDebounced() { clearTimeout(_renderTimer); _renderTimer = setTimeout(render, 80); }
+
+// Жанровый фильтр
+document.querySelectorAll('.genre-pill').forEach(pill => {
+  pill.addEventListener('click', () => {
+    document.querySelectorAll('.genre-pill').forEach(p => p.classList.remove('active'));
+    pill.classList.add('active');
+    activeGenre = pill.dataset.genre;
+    render();
+  });
+});
+
+function buildCard(g) {
+  const thumb = (g.screenshots && g.screenshots[0])
+    ? `<img class="game-card-thumb" src="${esc(g.screenshots[0].dataUrl)}" alt="${esc(g.name)}" loading="lazy"/>`
+    : `<div class="game-card-thumb-ph">${getGenreIcon(g.genre)}</div>`;
+  const filledStars = Math.round(g.rating||0);
+  const stars = '★'.repeat(filledStars) + '☆'.repeat(5-filledStars);
+  const ai = g.autoAdded ? '<div class="card-ai-badge">🤖 AI</div>' : '';
+  const playBadge = g.playUrl ? '<div class="card-play-badge">▶ Онлайн</div>' : '';
+  const shots = (g.screenshots||[]).length;
+  const commentCount = DB.getCommentCount(g.id);
+  return `
+    <div class="game-card" onclick="openGameModal('${esc(g.id)}')">
+      ${ai}
+      ${playBadge}
+      ${thumb}
+      <div class="game-card-body">
+        <div class="game-card-genre">${esc(g.genre||'Игра')}</div>
+        <h3>${esc(g.name)}</h3>
+        <p>${esc(g.summary ? g.summary.substring(0,85)+'…' : '')}</p>
+        <div class="game-card-footer">
+          <span class="card-year">${esc(g.year||'')}</span>
+          <span style="color:#f59e0b;font-size:12px;" title="${filledStars}/5 звёзд">${stars}</span>
+          ${shots > 0 ? `<span class="card-screens">📸 ${shots}</span>` : ''}
+          <span class="card-comments" title="Комментарии">💬 ${commentCount}</span>
+        </div>
+      </div>
+    </div>`;
+}
+
+function render() {
+  const q    = (el('catalog-q').value||'').toLowerCase();
+  const sort = el('catalog-sort').value;
+
+  const games = DB.query({ q, genre: activeGenre, sort });
+
+  // Статистика
+  const stats = DB.getStats();
+  el('st-total').textContent   = stats.total;
+  el('st-screens').textContent = stats.screens;
+  el('st-rated').textContent   = DB.getAllGames().filter(g=>g.rating>0).length;
+  el('st-genres').textContent  = stats.genres;
+
+  // Топ по рейтингу (только если нет активного поиска)
+  const topSec = el('top-section');
+  if (!q && !activeGenre && sort === 'new') {
+    const top = DB.query({ sort:'rating' }).filter(g=>g.rating>=4).slice(0,4);
+    if (top.length > 0) {
+      topSec.style.display = 'block';
+      el('top-grid').innerHTML = top.map(buildCard).join('');
+    } else {
+      topSec.style.display = 'none';
+    }
+  } else {
+    topSec.style.display = 'none';
+  }
+
+  // Заголовок каталога
+  const heading = el('catalog-heading');
+  heading.textContent = q
+    ? `Результаты поиска «${q}»`
+    : activeGenre
+      ? `Жанр: ${activeGenre}`
+      : 'Все игры';
+
+  const grid = el('catalog-grid');
+  if (games.length === 0) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
+      <span class="empty-icon">🔍</span>
+      <h3>${q||activeGenre ? 'Ничего не найдено' : 'База пока пуста'}</h3>
+      <p><a href="search.html">Найдите первую игру</a> или добавьте вручную кнопкой ниже.</p>
+    </div>`;
+    return;
+  }
+  grid.innerHTML = games.map(buildCard).join('');
+}
+
+// ══ МОДАЛКА ИГРЫ + КОММЕНТАРИИ ══════════════════════════════════
+
+let currentGameId = null;
+
+function openGameModal(gameId) {
+  const g = DB.findGameById(gameId);
+  if (!g) return;
+  currentGameId = gameId;
+
+  el('gm-title').textContent    = g.name;
+  el('gm-genre').textContent    = g.genre || '—';
+  el('gm-year').textContent     = g.year  || '—';
+  el('gm-platform').textContent = g.platform || '—';
+  el('gm-summary').textContent  = g.summary  || '';
+  el('gm-gameplay').textContent = g.gameplay || '';
+  el('gm-audience').textContent = g.audience || '';
+  el('gm-why').textContent      = g.why || '';
+
+  // Кнопка "Играть онлайн"
+  const playBlock = el('gm-play-block');
+  const playerWrap = el('gm-player-wrap');
+  const playerFrame = el('gm-player-frame');
+  const playLink = el('gm-play-link');
+
+  // Сбросить плеер при открытии новой игры
+  playerWrap.style.display = 'none';
+  playerFrame.src = '';
+  el('gm-play-btn').textContent = '▶ Играть прямо здесь';
+
+  if (g.playUrl) {
+    playBlock.style.display = 'flex';
+    playLink.href = g.playUrl;
+  } else {
+    playBlock.style.display = 'none';
+  }
+
+  renderComments(gameId);
+  el('gm-overlay').classList.add('open');
+}
+
+function togglePlay() {
+  const g = DB.findGameById(currentGameId);
+  if (!g || !g.playUrl) return;
+  const playerWrap = el('gm-player-wrap');
+  const playerFrame = el('gm-player-frame');
+  const btn = el('gm-play-btn');
+  if (playerWrap.style.display === 'none') {
+    playerFrame.src = g.playUrl;
+    playerWrap.style.display = 'block';
+    btn.textContent = '⏹ Скрыть игру';
+    // плавный скролл к плееру
+    setTimeout(() => playerWrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+  } else {
+    playerWrap.style.display = 'none';
+    playerFrame.src = '';
+    btn.textContent = '▶ Играть прямо здесь';
+  }
+}
+
+function closeGameModal() {
+  el('gm-overlay').classList.remove('open');
+  // Остановить игру при закрытии
+  el('gm-player-frame').src = '';
+  el('gm-player-wrap').style.display = 'none';
+  currentGameId = null;
+}
+function closeGmOnBg(e) { if(e.target===el('gm-overlay')) closeGameModal(); }
+
+function renderComments(gameId) {
+  const comments = DB.getComments(gameId);
+  const me = DB.currentUser();
+  const list = el('gm-comments-list');
+  if (comments.length === 0) {
+    list.innerHTML = '<p class="no-comments">Комментариев пока нет — будьте первым! 👇</p>';
+  } else {
+    list.innerHTML = comments.map(c => `
+      <div class="comment-item" id="c-${c.id}">
+        <div class="comment-header">
+          <span class="comment-author">👤 ${esc(c.author)}</span>
+          <span class="comment-date">${formatDate(c.createdAt)}</span>
+          ${(me && (me.id === c.authorId || DB.isModerator()))
+            ? `<button class="comment-del" onclick="deleteComment('${c.id}')">✕</button>`
+            : ''}
+        </div>
+        <div class="comment-text">${esc(c.text)}</div>
+      </div>`).join('');
+  }
+}
+
+function submitComment() {
+  if (!currentGameId) return;
+  const text = el('gm-comment-input').value.trim();
+  if (!text) { alert('Напишите что-нибудь!'); return; }
+  DB.addComment(currentGameId, text);
+  el('gm-comment-input').value = '';
+  renderComments(currentGameId);
+  render(); // обновить счётчик на карточке
+}
+
+function deleteComment(commentId) {
+  if (!confirm('Удалить комментарий?')) return;
+  DB.deleteComment(commentId);
+  if (currentGameId) renderComments(currentGameId);
+  render();
+}
+
+// ══ МОДАЛЬНОЕ ОКНО ════════════════════════════════════════════════
+
+function openModal() { el('modal-overlay').classList.add('open'); }
+function closeModal() { el('modal-overlay').classList.remove('open'); }
+function closeModalOnBg(e) { if(e.target===el('modal-overlay')) closeModal(); }
+
+function submitModal() {
+  const name    = el('m-name').value.trim();
+  const summary = el('m-summary').value.trim();
+  if (!name || !summary) { alert('Заполните хотя бы название и описание.'); return; }
+  DB.add({
+    name, summary,
+    genre:       el('m-genre').value.trim(),
+    year:        el('m-year').value.trim(),
+    platform:    el('m-platform').value.trim(),
+    gameplay:    el('m-gameplay').value.trim(),
+    audience:    el('m-audience').value.trim(),
+    why:         el('m-why').value.trim(),
+    addedByUser: true,
+  });
+  closeModal();
+  ['m-name','m-genre','m-year','m-platform','m-summary','m-gameplay','m-audience','m-why']
+    .forEach(id => { el(id).value=''; });
+  render();
+}
+
+document.addEventListener('keydown', e => { if(e.key==='Escape') { closeModal(); closeGameModal(); } });
+render();
+</script>
+</body>
+</html>

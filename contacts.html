@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>ИграСвет — Контакты</title>
+<link rel="stylesheet" href="style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Lora:ital,wght@0,400;0,600;1,400&family=Orbitron:wght@600;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+<script>(function(){ document.documentElement.setAttribute('data-theme', localStorage.getItem('igrasvet_theme')||'classic'); })();</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="logo"><span class="logo-icon">♟</span><span class="logo-text">ИграСвет</span></a>
+    <div class="header-right">
+      <div class="header-contacts">
+        <span>📞 8 (963) 538-85-86</span>
+        <span>✉ Fufufuuffyo@gmail.com</span>
+        
+      </div>
+      <div id="auth-nav-slot" style="position:relative;"></div>
+      <button id="theme-btn" class="theme-btn" onclick="toggleTheme()">🌃 Неон</button>
+    </div>
+  </div>
+</header>
+
+<div id="nav-wrapper">
+<nav class="main-nav">
+  <div class="nav-inner">
+    <button class="nav-hamburger" onclick="toggleMobileNav()" aria-label="Меню">☰</button>
+  </div>
+  <ul>
+      <li><a href="index.html">Главная</a></li>
+      <li><a href="games.html">Каталог игр</a></li>
+      <li><a href="search.html">Найти игру</a></li>
+      <li><a href="slang.html">Словарь сленга</a></li>
+      <li><a href="about.html">О нас</a></li>
+      <li><a href="contacts.html">Контакты</a></li>
+    </ul>
+</nav>
+</div>
+
+<main>
+  <section class="page-hero">
+    <h1 class="reveal">Контакты</h1>
+    <p class="page-sub">Напишите нам — мы читаем каждое письмо</p>
+  </section>
+
+  <section class="contacts-section">
+    <div class="contacts-grid">
+      <div class="contact-info">
+        <h2>Как с нами связаться</h2>
+        <div class="contact-block">
+          <div class="contact-icon">📞</div>
+          <div><h3>Телефон</h3><p>8 (963) 538-85-86</p><p class="contact-note">Бесплатно для всех регионов России</p></div>
+        </div>
+        <div class="contact-block">
+          <div class="contact-icon">✉</div>
+          <div><h3>Электронная почта</h3><p>Fufufuuffyo@gmail.com</p><p class="contact-note">Отвечаем в течение одного рабочего дня</p></div>
+        </div>
+        <div class="contact-block">
+          <div class="contact-icon">📍</div>
+          <div><h3>Адрес</h3><p>Москва, ул. Игровая, д. 1, офис 42</p><p class="contact-note">Пн–Пт: 10:00–18:00</p></div>
+        </div>
+        <div class="contact-block">
+          <div class="contact-icon">💬</div>
+          <div>
+            <h3>Социальные сети</h3>
+            <p><a href="#">ВКонтакте</a> · <a href="#">Telegram</a> · <a href="#">YouTube</a></p>
+            <p class="contact-note">Новости и обсуждения каждый день</p>
+          </div>
+        </div>
+        <div class="map-ph">
+          <div class="map-inner">
+            <span class="map-pin">📍</span>
+            <p>Москва, ул. Игровая, д. 1</p>
+            <p class="contact-note">Ближайшее метро: Игровая</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-form-wrap">
+        <h2>Написать нам</h2>
+        <p id="form-auth-hint" style="display:none;font-size:13px;color:var(--muted);margin-bottom:12px;">
+          🔒 Вы вошли как <strong id="form-auth-user"></strong>. Почта подставлена из вашего аккаунта.
+        </p>
+        <p id="form-noauth-hint" style="font-size:13px;color:var(--muted);margin-bottom:12px;">
+          Все поля обязательны для заполнения. <a href="auth.html">Войдите</a>, чтобы данные подставились автоматически.
+        </p>
+        <div class="contact-form">
+          <div class="form-group">
+            <label>Ваше имя <span style="color:var(--accent)">*</span></label>
+            <input type="text" id="f-name" placeholder="Иван Иванов" required/>
+          </div>
+          <div class="form-group">
+            <label>Электронная почта <span style="color:var(--accent)">*</span></label>
+            <input type="email" id="f-email" placeholder="ivan@example.ru" required/>
+            <small id="f-email-note" style="display:none;color:var(--muted);font-size:12px;">Используется почта из вашего аккаунта</small>
+          </div>
+          <div class="form-group">
+            <label>Тема <span style="color:var(--accent)">*</span></label>
+            <input type="text" id="f-subject" placeholder="Хочу предложить игру" required/>
+          </div>
+          <div class="form-group">
+            <label>Сообщение <span style="color:var(--accent)">*</span></label>
+            <textarea id="f-message" rows="5" placeholder="Напишите ваш вопрос или предложение…" required></textarea>
+          </div>
+          <button class="btn-main" onclick="submitForm()">Отправить сообщение</button>
+          <div id="form-success" class="form-success" style="display:none">✅ Сообщение сохранено! Мы свяжемся с вами в ближайшее время.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="messages-section">
+    <h2 class="section-title">Сохранённые обращения</h2>
+    <div id="messages-list" class="messages-list"></div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-col"><div class="footer-logo">♟ ИграСвет</div><p>Сайт о видеоиграх простым языком.</p></div>
+    <div class="footer-col">
+      <h4>Навигация</h4>
+      <ul>
+      <li><a href="index.html">Главная</a></li>
+      <li><a href="games.html">Каталог игр</a></li>
+      <li><a href="search.html">Найти игру</a></li>
+      <li><a href="slang.html">Словарь сленга</a></li>
+      <li><a href="about.html">О нас</a></li>
+      <li><a href="contacts.html">Контакты</a></li>
+    </ul>
+    </div>
+    <div class="footer-col"><h4>Контакты</h4><p>📞 8 (963) 538-85-86</p><p>✉ Fufufuuffyo@gmail.com</p><p>📍 Москва, ул. Игровая, д. 1</p></div>
+    <div class="footer-col"><h4>Юридическое</h4><p>ООО «ИграСвет»<br/>ИНН: 7700000001<br/>ОГРН: 1234567890123</p><p><a href="#">Политика конфиденциальности</a></p><p><a href="#">Условия использования</a></p></div>
+  </div>
+  <div class="footer-bottom"><p>© 2025 ИграСвет. Все права защищены.</p></div>
+</footer>
+
+<script src="db.js"></script>
+<script src="shared.js"></script>
+<script>
+  updateThemeBtn();
+
+  // ── ПОДСТАНОВКА ДАННЫХ ИЗ АККАУНТА ─────────────────────────
+  (function prefillFromAuth() {
+    const user = DB.getCurrentUser();
+    if (user) {
+      // Подставить имя
+      const nameField = el('f-name');
+      nameField.value = user.displayName || user.username;
+
+      // Подставить почту если есть в профиле
+      const emailField = el('f-email');
+      if (user.email) {
+        emailField.value = user.email;
+        emailField.readOnly = true;
+        emailField.style.opacity = '0.75';
+        emailField.style.cursor = 'not-allowed';
+        el('f-email-note').style.display = 'block';
+      }
+
+      // Показать подсказку авторизации
+      el('form-auth-hint').style.display = 'block';
+      el('form-auth-user').textContent = user.displayName || user.username;
+      el('form-noauth-hint').style.display = 'none';
+    }
+  })();
+
+  // ── ОТПРАВКА ФОРМЫ ──────────────────────────────────────────
+  function submitForm() {
+    const name    = el('f-name').value.trim();
+    const email   = el('f-email').value.trim();
+    const subject = el('f-subject').value.trim();
+    const message = el('f-message').value.trim();
+
+    // Валидация — все поля обязательны
+    if (!name)    { shakeField('f-name',    'Укажите ваше имя');           return; }
+    if (!email)   { shakeField('f-email',   'Укажите электронную почту');  return; }
+    if (!isValidEmail(email)) { shakeField('f-email', 'Введите корректный e-mail'); return; }
+    if (!subject) { shakeField('f-subject', 'Укажите тему обращения');     return; }
+    if (!message) { shakeField('f-message', 'Напишите сообщение');         return; }
+
+    DB.addMessage({ name, email, subject, message, date: new Date().toLocaleDateString('ru-RU') });
+    el('form-success').style.display = 'block';
+
+    // Очищаем только незалоченные поля
+    ['f-subject','f-message'].forEach(id => { el(id).value = ''; });
+    const emailField = el('f-email');
+    if (!emailField.readOnly) {
+      el('f-name').value = '';
+      emailField.value = '';
+    }
+    setTimeout(() => { el('form-success').style.display = 'none'; }, 5000);
+    renderMsgs();
+  }
+
+  function isValidEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+
+  function shakeField(id, msg) {
+    const input = el(id);
+    input.style.borderColor = 'var(--accent, #e74c3c)';
+    input.style.animation = 'none';
+    input.focus();
+    alert(msg);
+    setTimeout(() => { input.style.borderColor = ''; }, 2000);
+  }
+
+  function renderMsgs() {
+    const msgs = DB.getMessages();
+    const container = el('messages-list');
+    if (msgs.length === 0) {
+      container.innerHTML = '<p style="color:var(--muted);font-style:italic;">Пока нет обращений.</p>';
+      return;
+    }
+    container.innerHTML = [...msgs].reverse().map(m => `
+      <div class="msg-card">
+        <div class="msg-header">
+          <strong>${esc(m.name)}</strong>
+          <span>${esc(m.email)}</span>
+          <span class="msg-date">${esc(m.date||'')}</span>
+        </div>
+        ${m.subject ? `<p class="msg-subject">Тема: ${esc(m.subject)}</p>` : ''}
+        <p>${esc(m.message)}</p>
+      </div>`).join('');
+  }
+
+  renderMsgs();
+</script>
+</body>
+</html>

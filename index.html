@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>ИграСвет — Игры простым языком</title>
+<link rel="stylesheet" href="style.css"/>
+<script>(function(){ document.documentElement.setAttribute('data-theme', localStorage.getItem('igrasvet_theme')||'classic'); })();</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="logo">
+      <span class="logo-icon">♟</span>
+      <span class="logo-text">ИграСвет</span>
+    </a>
+    <div class="header-right">
+      <div class="header-contacts">
+        <span>📞 8 (963) 538-85-86</span>
+        
+      </div>
+      <div id="auth-nav-slot" style="position:relative;"></div>
+      <button id="theme-btn" class="theme-btn" onclick="toggleTheme()">🌃 Неон</button>
+    </div>
+  </div>
+</header>
+
+<div id="nav-wrapper">
+  <nav class="main-nav">
+    <div class="nav-inner">
+      <button class="nav-hamburger" onclick="toggleMobileNav()">☰</button>
+    </div>
+    <ul>
+      <li><a href="index.html" class="active">Главная</a></li>
+      <li><a href="games.html">Каталог игр</a></li>
+      <li><a href="search.html">Найти игру</a></li>
+      <li><a href="slang.html">Словарь сленга</a></li>
+      <li><a href="about.html">О нас</a></li>
+      <li><a href="contacts.html">Контакты</a></li>
+    </ul>
+  </nav>
+</div>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-content">
+        <p class="hero-label">Добро пожаловать в ИграСвет</p>
+        <h1>Мир игр<br/><em>простым языком</em></h1>
+        <p class="hero-sub">Рассказываем о видеоиграх без жаргона. Введите название — ИИ всё найдёт и объяснит понятно.</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <a href="search.html" class="btn-main">🔍 Найти игру</a>
+          <a href="slang.html" class="btn-main" style="background:var(--surface);color:var(--dark);border:1px solid var(--border);box-shadow:none;">📖 Словарь сленга</a>
+        </div>
+      </div>
+      <div class="hero-deco">
+        <div class="deco-circle c1"></div>
+        <div class="deco-circle c2"></div>
+        <div class="floating-cards">
+          <div class="fcard">🎮 Экшен</div>
+          <div class="fcard">🧩 Головоломка</div>
+          <div class="fcard">⚔️ Ролевая</div>
+          <div class="fcard">🏎 Гонки</div>
+          <div class="fcard">🏰 Стратегия</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- БАННЕР ДЛЯ ГОСТЕЙ -->
+  <div id="guest-banner" style="display:none;background:rgba(var(--accent-rgb),.06);border-bottom:1px solid rgba(var(--accent-rgb),.15);padding:14px 24px;">
+    <div style="max-width:var(--max-w);margin:0 auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+      <span style="font-size:14px;font-weight:600;color:var(--dark);">👋 Зарегистрируйтесь, чтобы добавлять игры и вести личную библиотеку</span>
+      <a href="auth.html" class="btn-main" style="padding:8px 20px;font-size:13px;">Войти / Регистрация</a>
+    </div>
+  </div>
+
+  <!-- ВОЗМОЖНОСТИ -->
+  <section class="features">
+    <h2 class="section-title reveal">Что умеет сайт</h2>
+    <div class="features-grid">
+      <div class="feature-card reveal" style="transition-delay:.05s">
+        <span class="feature-icon">🤖</span>
+        <h3>ИИ-поиск</h3>
+        <p>Введите любое название — ИИ найдёт информацию и объяснит простым языком.</p>
+      </div>
+      <div class="feature-card reveal" style="transition-delay:.10s">
+        <span class="feature-icon">📖</span>
+        <h3>Словарь сленга</h3>
+        <p>Более 40 геймерских терминов от А до Я: что значит "нерф", "гринд", "тилт" и многое другое.</p>
+      </div>
+      <div class="feature-card reveal" style="transition-delay:.15s">
+        <span class="feature-icon">👥</span>
+        <h3>Система ролей</h3>
+        <p>Пользователи добавляют игры, модераторы и администраторы одобряют контент. Всё под контролем.</p>
+      </div>
+      <div class="feature-card reveal" style="transition-delay:.20s">
+        <span class="feature-icon">📸</span>
+        <h3>Скриншоты и заметки</h3>
+        <p>Загружайте скриншоты и оставляйте личные заметки к каждой игре.</p>
+      </div>
+      <div class="feature-card reveal" style="transition-delay:.25s">
+        <span class="feature-icon">⭐</span>
+        <h3>Рейтинг и библиотека</h3>
+        <p>Ставьте звёзды, ведите личную библиотеку игр — только для вас.</p>
+      </div>
+      <div class="feature-card reveal" style="transition-delay:.30s">
+        <span class="feature-icon">🎨</span>
+        <h3>Классика и Неон</h3>
+        <p>Тёплый редакционный стиль или киберпанк-неон — переключайте одной кнопкой.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ЖАНРЫ -->
+  <section class="genres-section">
+    <h2 class="section-title reveal">Жанры</h2>
+    <div class="genres-grid" id="genre-filter">
+      <div class="genre-pill active" data-genre="">🎮 Все</div>
+      <div class="genre-pill" data-genre="экшен">💥 Экшен</div>
+      <div class="genre-pill" data-genre="ролевая">⚔️ Ролевые</div>
+      <div class="genre-pill" data-genre="стратегия">🏰 Стратегии</div>
+      <div class="genre-pill" data-genre="головоломка">🧩 Головоломки</div>
+      <div class="genre-pill" data-genre="аркада">🕹 Аркады</div>
+      <div class="genre-pill" data-genre="гонки">🏎 Гонки</div>
+      <div class="genre-pill" data-genre="ужасы">👻 Ужасы</div>
+      <div class="genre-pill" data-genre="песочница">🏖 Песочница</div>
+    </div>
+  </section>
+
+  <!-- ИГРЫ -->
+  <section style="max-width:var(--max-w);margin:0 auto;padding:60px 24px 80px;">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:36px;">
+      <h2 class="section-title reveal" style="margin-bottom:0;border:none;padding:0;">Недавно добавленные</h2>
+      <a href="games.html" style="font-size:13px;font-weight:700;color:var(--accent);">Весь каталог →</a>
+    </div>
+    <div id="recent-grid" class="games-grid"></div>
+  </section>
+
+  <!-- СЛОВАРЬ ПРЕВЬЮ -->
+  <section style="background:var(--bg2);padding:60px 24px;border-top:1px solid var(--border);">
+    <div style="max-width:var(--max-w);margin:0 auto;">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:28px;">
+        <h2 class="section-title reveal" style="margin:0;border:none;padding:0;">Геймерский сленг — популярное</h2>
+        <a href="slang.html" style="font-size:13px;font-weight:700;color:var(--accent);">Все термины →</a>
+      </div>
+      <div id="slang-preview" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-col">
+      <div class="footer-logo">♟ ИграСвет</div>
+      <p>Сайт о видеоиграх простым языком. Для всех, кто хочет понять мир игр.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Навигация</h4>
+      <ul>
+        <li><a href="index.html">Главная</a></li>
+        <li><a href="games.html">Каталог игр</a></li>
+        <li><a href="search.html">Найти игру</a></li>
+        <li><a href="slang.html">Словарь сленга</a></li>
+        <li><a href="about.html">О нас</a></li>
+        <li><a href="contacts.html">Контакты</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Контакты</h4>
+      <p>📞 8 (963) 538-85-86</p>
+      <p>✉ Fufufuuffyo@gmail.com</p>
+    </div>
+    <div class="footer-col">
+      <h4>Аккаунт</h4>
+      <ul>
+        <li><a href="auth.html">Войти</a></li>
+        <li><a href="auth.html">Регистрация</a></li>
+        <li><a href="admin.html">Панель управления</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom"><p>© 2025 ИграСвет. Все права защищены.</p></div>
+</footer>
+
+<script src="db.js"></script>
+<script src="shared.js"></script>
+<script>
+  updateThemeBtn();
+
+  // Гостевой баннер
+  if (!DB.isLoggedIn()) document.getElementById('guest-banner').style.display='block';
+
+  // Жанры
+  let activeGenre = '';
+  document.querySelectorAll('.genre-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      document.querySelectorAll('.genre-pill').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      activeGenre = pill.dataset.genre;
+      renderGrid();
+    });
+  });
+
+  function renderGrid() {
+    const games = DB.query({ genre: activeGenre, sort: 'new' }).filter(g=>g.status==='approved').slice(0,8);
+    const grid  = document.getElementById('recent-grid');
+    if (!games.length) {
+      grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
+        <span class="empty-icon">🎮</span>
+        <h3>${activeGenre?'Нет игр этого жанра':'База пока пуста'}</h3>
+        <p><a href="search.html">Найти первую игру</a></p>
+      </div>`;
+      return;
+    }
+    grid.innerHTML = games.map(buildCard).join('');
+  }
+
+  function buildCard(g) {
+    const thumb = (g.screenshots&&g.screenshots[0])
+      ? `<img class="game-card-thumb" src="${esc(g.screenshots[0].dataUrl)}" loading="lazy"/>`
+      : `<div class="game-card-thumb-ph">${getGenreIcon(g.genre)}</div>`;
+    const stars = '★'.repeat(Math.round(g.rating||0))+'☆'.repeat(5-Math.round(g.rating||0));
+    return `<div class="game-card" onclick="location.href='search.html?q=${encodeURIComponent(g.name)}'">
+      ${g.autoAdded?'<div class="card-ai-badge">🤖 AI</div>':''}
+      ${thumb}
+      <div class="game-card-body">
+        <div class="game-card-genre">${esc(g.genre||'Игра')}</div>
+        <h3>${esc(g.name)}</h3>
+        <p>${esc((g.summary||'').substring(0,90)+'…')}</p>
+        <div class="game-card-footer">
+          <span class="card-year">${esc(g.year||'')}</span>
+          <span style="color:#f59e0b;font-size:13px;">${stars}</span>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  // Превью словаря (5 популярных)
+  const PREVIEW_TERMS = ['Нерф','Гринд','Тилт','Баг','Мета'];
+  const SLANG_MINI = [
+    { term:'Нерф', definition:'Ослабление персонажа или оружия разработчиками.', category:'Общий' },
+    { term:'Гринд', definition:'Монотонные повторяющиеся действия ради награды.', category:'РПГ' },
+    { term:'Тилт', definition:'Эмоциональный срыв, из-за которого играешь хуже.', category:'Психология' },
+    { term:'Баг', definition:'Ошибка в игре, из-за которой что-то работает не так.', category:'Общий' },
+    { term:'Мета', definition:'Самые эффективные стратегии в текущей версии игры.', category:'Общий' },
+    { term:'ГГ / GG', definition:'"Хорошая игра" — говорят в конце матча в знак уважения.', category:'Мультиплеер' },
+  ];
+  document.getElementById('slang-preview').innerHTML = SLANG_MINI.map(s=>`
+    <a href="slang.html" style="text-decoration:none;">
+    <div class="slang-card reveal" style="cursor:pointer;">
+      <div class="slang-card-head">
+        <div class="slang-term">${esc(s.term)}</div>
+        <div class="slang-category">${esc(s.category)}</div>
+      </div>
+      <div class="slang-definition" style="font-size:13px;margin-top:6px;">${esc(s.definition)}</div>
+    </div></a>`).join('');
+
+  renderGrid();
+</script>
+</body>
+</html>

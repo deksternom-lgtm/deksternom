@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Словарь геймерского сленга — ИграСвет</title>
+<link rel="stylesheet" href="style.css"/>
+<script>(function(){ document.documentElement.setAttribute('data-theme', localStorage.getItem('igrasvet_theme')||'classic'); })();</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="logo"><span class="logo-icon">♟</span><span class="logo-text">ИграСвет</span></a>
+    <div class="header-right">
+      <div id="auth-nav-slot"></div>
+      <button id="theme-btn" class="theme-btn" onclick="toggleTheme()">🌃 Неон</button>
+    </div>
+  </div>
+</header>
+
+<div id="nav-wrapper">
+  <nav class="main-nav">
+    <div class="nav-inner"><button class="nav-hamburger" onclick="toggleMobileNav()">☰</button></div>
+    <ul>
+      <li><a href="index.html">Главная</a></li>
+      <li><a href="games.html">Каталог игр</a></li>
+      <li><a href="search.html">Найти игру</a></li>
+      <li><a href="slang.html" class="active">Словарь сленга</a></li>
+      <li><a href="about.html">О нас</a></li>
+      <li><a href="contacts.html">Контакты</a></li>
+    </ul>
+  </nav>
+</div>
+
+<section class="slang-hero">
+  <h1 class="reveal">📖 Словарь геймерского сленга</h1>
+  <p class="reveal">Геймерские слова и выражения — простым языком, от А до Я</p>
+  <div class="slang-counter reveal" id="slang-counter"></div>
+</section>
+
+<div class="slang-layout">
+  <!-- САЙДБАР -->
+  <aside class="slang-sidebar">
+    <div class="slang-search-wrap">
+      <input class="slang-search" id="slang-search" placeholder="🔍 Поиск термина…" oninput="renderSlang()"/>
+    </div>
+    <div class="alpha-nav" id="alpha-nav"></div>
+  </aside>
+
+  <!-- СЛОВАРЬ -->
+  <main id="slang-main"></main>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-col">
+      <div class="footer-logo">♟ ИграСвет</div>
+      <p>Сайт о видеоиграх простым языком.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Навигация</h4>
+      <ul>
+        <li><a href="index.html">Главная</a></li>
+        <li><a href="games.html">Каталог</a></li>
+        <li><a href="slang.html">Словарь</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom"><p>© 2025 ИграСвет. Все права защищены.</p></div>
+</footer>
+
+<script src="db.js"></script>
+<script src="shared.js"></script>
+<script>
+updateThemeBtn();
+
+// ══════════════════════════════════════════════════════════════
+//  БАЗА СЛЕНГА
+//  term, category, definition, example, games[], origin
+// ══════════════════════════════════════════════════════════════
+const SLANG = [
+  // А
+  { term:'АФК / AFK', letter:'А', category:'Общий',
+    definition:'Расшифровывается как "Away From Keyboard" — "Отошёл от клавиатуры". Так говорят, когда игрок бездействует или уходит посреди игры.',
+    example:'"Не стреляйте — я АФК, буду через минуту."',
+    games:['World of Warcraft','CS:GO','Dota 2','Among Us'],
+    origin:'Появился в онлайн-чатах 1990-х, затем перекочевал в игровые чаты.' },
+
+  { term:'Агро / Агр', letter:'А', category:'РПГ',
+    definition:'Привлечь внимание противника — заставить его переключиться на тебя и атаковать тебя, а не союзников. Танки специально "тянут агро" на себя.',
+    example:'"Танк, тяни агро! Я зашью всех!" — кричит лекарь.',
+    games:['World of Warcraft','Final Fantasy XIV','Dungeons & Dragons Online'],
+    origin:'От английского "aggro" — сокращение от aggression (агрессия).' },
+
+  { term:'Алт / Alt', letter:'А', category:'РПГ',
+    definition:'Второй (или третий) персонаж в игре, которым вы пользуетесь реже основного. Основного называют "мейном".',
+    example:'"Мой алт — вор, но основной — воин."',
+    games:['World of Warcraft','Diablo 4','Lost Ark','Path of Exile'],
+    origin:'От английского "alternate" — запасной, альтернативный.' },
+
+  // Б
+  { term:'Баг', letter:'Б', category:'Общий',
+    definition:'Ошибка в игре. Что-то сломалось и работает не так, как задумано разработчики. Может быть безобидным или полностью рушить игру.',
+    example:'"После обновления появился баг — персонаж проваливается сквозь пол."',
+    games:['Cyberpunk 2077','Battlefield','Skyrim','GTA 5'],
+    origin:'От английского "bug" — жук. Легенда гласит, что первый компьютерный баг — настоящий мотылёк, попавший в механизм компьютера в 1947 году.' },
+
+  { term:'Бафф', letter:'Б', category:'РПГ',
+    definition:'Улучшение характеристик персонажа: больше урона, скорости, защиты. Противоположность — дебафф (ослабление).',
+    example:'"Жрец дал баф на скорость — теперь бегаем быстрее."',
+    games:['World of Warcraft','League of Legends','Dota 2','Diablo'],
+    origin:'От английского "buff" — наращивать, усиливать.' },
+
+  { term:'Босс', letter:'Б', category:'Общий',
+    definition:'Очень сильный враг, которого нужно победить в конце уровня или области. У него намного больше здоровья, чем у обычных врагов.',
+    example:'"Я уже час пытаюсь убить этого босса — никак не получается."',
+    games:['Dark Souls','Elden Ring','The Legend of Zelda','Cuphead'],
+    origin:'От английского "boss" — начальник, главный.' },
+
+  { term:'Балансировка / Баланс', letter:'Б', category:'Общий',
+    definition:'Насколько честна и равноценна игра. Если один персонаж намного сильнее других — баланс нарушен.',
+    example:'"Надо срочно нерфить этого героя — он сломал весь баланс."',
+    games:['League of Legends','Overwatch','Hearthstone','Tekken'],
+    origin:'Прямое заимствование из английского.' },
+
+  // В
+  { term:'Ваншот', letter:'В', category:'Боевик',
+    definition:'Убить врага одним ударом или выстрелом. Мечта большинства игроков — "ваншотнуть" сильного противника.',
+    example:'"Снайпером в голову — ваншот! Красиво."',
+    games:['CS:GO','Valorant','PUBG','Call of Duty'],
+    origin:'От английского "one-shot" — одним выстрелом.' },
+
+  { term:'Войс / Войсчат', letter:'В', category:'Мультиплеер',
+    definition:'Голосовое общение с другими игроками через микрофон прямо во время игры. Позволяет быстро координировать команду.',
+    example:'"Заходи в войс — там все наши уже ждут."',
+    games:['CS:GO','Valorant','Among Us','Fortnite'],
+    origin:'От английского "voice chat".' },
+
+  // Г
+  { term:'Гринд', letter:'Г', category:'РПГ',
+    definition:'Долгое и однообразное выполнение одних и тех же действий ради награды: убивать одних и тех же монстров, собирать ресурсы часами.',
+    example:'"Я гринжу уровни уже три часа — достало, но иначе нельзя."',
+    games:['World of Warcraft','Diablo 4','Monster Hunter','Path of Exile'],
+    origin:'От английского "grind" — шлифовать, монотонно работать.' },
+
+  { term:'Гг / GG', letter:'Г', category:'Мультиплеер',
+    definition:'Good Game — "хорошая игра". Пишут в конце матча в знак уважения к противникам. Иногда пишут до окончания, чтобы сказать "мы проиграли, сдаёмся".',
+    example:'"Gg всем! Отличный матч был."',
+    games:['CS:GO','Dota 2','League of Legends','Starcraft'],
+    origin:'Появился в ранних онлайн-играх 1990-х как жест спортивного уважения.' },
+
+  { term:'Геймплей', letter:'Г', category:'Общий',
+    definition:'То, как играется игра — управление, механики, ощущения. Не история и не графика, а именно процесс игры.',
+    example:'"Графика так себе, но геймплей затягивает — не оторваться."',
+    games:['Все игры'],
+    origin:'Прямое заимствование от английского "gameplay".' },
+
+  // Д
+  { term:'Дебафф', letter:'Д', category:'РПГ',
+    definition:'Негативный эффект на персонажа: замедление, снижение урона или защиты, отравление. Противоположность баффа.',
+    example:'"Шаман наложил дебафф на скорость — теперь я ползу как черепаха."',
+    games:['World of Warcraft','Dota 2','Final Fantasy','Divinity'],
+    origin:'От английского "debuff" — приставка de- означает отрицание.' },
+
+  { term:'Дроп', letter:'Д', category:'РПГ',
+    definition:'То, что падает с убитого врага или из открытого сундука: оружие, броня, ресурсы, деньги.',
+    example:'"С этого босса выпал редкий дроп! Невероятно."',
+    games:['Diablo 4','Borderlands','Path of Exile','Warframe'],
+    origin:'От английского "drop" — падать, выпадать.' },
+
+  { term:'Думскроллинг / Думскроллинг', letter:'Д', category:'Разное',
+    definition:'Бесконечная прокрутка ленты новостей об игре в поисках плохих новостей. В игровом контексте — зависать на форумах с жалобами на игру.',
+    example:'"Опять думскроллю реддит после плохого патча."',
+    games:['Cyberpunk 2077','No Man\'s Sky'],
+    origin:'Пришло из интернет-культуры, адаптировано игровым сообществом.' },
+
+  // К
+  { term:'Кемпер', letter:'К', category:'Шутер',
+    definition:'Игрок, который прячется в одном месте и ждёт, пока враги сами подойдут. Многие считают это нечестной тактикой.',
+    example:'"Этот кемпер сидит за ящиком уже пять минут — противно играть против него."',
+    games:['CS:GO','Call of Duty','PUBG','Battlefield'],
+    origin:'От английского "camper" — тот, кто "разбил лагерь" и не двигается.' },
+
+  { term:'Клан / Гильдия', letter:'К', category:'Мультиплеер',
+    definition:'Группа игроков, объединившихся для совместной игры. В одних играх называется кланом, в других — гильдией.',
+    example:'"Вступи в наш клан — вместе веселее фармить."',
+    games:['World of Warcraft','Clash of Clans','Destiny 2','GTA Online'],
+    origin:'Клан — из шотландских кланов. Гильдия — из средневековых ремесленных объединений.' },
+
+  { term:'Крит / Критический удар', letter:'К', category:'РПГ',
+    definition:'Удар или выстрел, который наносит значительно больше урона, чем обычно. Часто выделяется особым звуком или визуальным эффектом.',
+    example:'"Крит в 50 000 урона! Вот это да!"',
+    games:['Diablo','World of Warcraft','Elden Ring','Path of Exile'],
+    origin:'От "критический" — решающий, ключевой.' },
+
+  { term:'Кулдаун / КД', letter:'К', category:'Общий',
+    definition:'Время перезарядки способности — сколько нужно ждать, чтобы использовать умение ещё раз.',
+    example:'"Подождите — моя ультимейтная способность на кулдауне, ещё 30 секунд."',
+    games:['League of Legends','Overwatch','Dota 2','World of Warcraft'],
+    origin:'От английского "cooldown" — остывание, охлаждение.' },
+
+  // Л
+  { term:'Лаг', letter:'Л', category:'Общий',
+    definition:'Задержка между вашими действиями и реакцией игры из-за медленного интернета или слабого компьютера. Лаги делают игру дёрганой.',
+    example:'"Игра лагает — пинг 500, невозможно играть!"',
+    games:['Все онлайн-игры'],
+    origin:'От английского "lag" — отставать, задерживаться.' },
+
+  { term:'Лут', letter:'Л', category:'РПГ',
+    definition:'Вещи, которые можно подобрать в игре: оружие, броня, ресурсы. Охота за лутом — основа многих игр.',
+    example:'"В этом подземелье отличный лут — обязательно сходи."',
+    games:['Diablo 4','Borderlands','Destiny 2','The Division'],
+    origin:'От английского "loot" — военная добыча, трофеи.' },
+
+  { term:'Левелап / Level Up', letter:'Л', category:'РПГ',
+    definition:'Повышение уровня персонажа. Обычно происходит после набора достаточного количества очков опыта.',
+    example:'"Левелап! Наконец-то 60-й уровень!"',
+    games:['World of Warcraft','Diablo','RPG-игры в целом'],
+    origin:'Прямое заимствование от английского "level up".' },
+
+  // М
+  { term:'Мейн', letter:'М', category:'РПГ',
+    definition:'Основной персонаж или герой, которым игрок играет чаще всего и развивает в первую очередь.',
+    example:'"Мой мейн — паладин, но ещё качаю друида на алте."',
+    games:['World of Warcraft','League of Legends','Overwatch'],
+    origin:'От английского "main" — главный, основной.' },
+
+  { term:'Мета', letter:'М', category:'Общий',
+    definition:'Набор самых сильных стратегий, персонажей или билдов в текущей версии игры. Если вы "играете в мету" — вы используете то, что сейчас считается самым эффективным.',
+    example:'"Сейчас мета — три снайпера и два медика. Всё остальное проиграет."',
+    games:['League of Legends','Hearthstone','CS:GO','Dota 2'],
+    origin:'От английского "meta" — "Most Efficient Tactics Available" или просто "мета" как "над игрой".' },
+
+  { term:'Мобы', letter:'М', category:'РПГ',
+    definition:'Обычные враги в игре — не боссы, а рядовые противники, которых много и которых нужно постоянно убивать.',
+    example:'"Сначала зачисти этих мобов, потом зайдём на босса."',
+    games:['World of Warcraft','Minecraft','Diablo','Path of Exile'],
+    origin:'От английского "mob" — подвижный объект, сокращение от "mobile object".' },
+
+  // Н
+  { term:'Нерф', letter:'Н', category:'Общий',
+    definition:'Ослабление персонажа, оружия или способности разработчиками. Если вас нерфнули — ваши любимые умения стали слабее.',
+    example:'"Опять нерфнули моего героя — теперь он наносит на 30% меньше урона."',
+    games:['League of Legends','Overwatch','Fortnite','Hearthstone'],
+    origin:'От игрушечного оружия Nerf — мягкого и безопасного. Ослабить = сделать "мягким".' },
+
+  { term:'Нуб / Noob / Нубик', letter:'Н', category:'Общий',
+    definition:'Новичок, который плохо играет и не знает механик. Иногда используется как оскорбление, иногда — просто описание опыта.',
+    example:'"Не ругайте его — он нуб, только начал играть."',
+    games:['Все мультиплеерные игры'],
+    origin:'От английского "newbie" — новичок. Сократилось до "noob".' },
+
+  // О
+  { term:'Овервотч / Overwatch', letter:'О', category:'Разное',
+    definition:'В общем контексте — слежка за врагами сверху. Также название популярного командного шутера от Blizzard.',
+    example:'"Прикрывай с оверватча, пока мы бежим к точке."',
+    games:['Overwatch','CS:GO','тактические шутеры'],
+    origin:'От английского "overwatch" — наблюдение, прикрытие сверху.' },
+
+  { term:'Опенворлд / Открытый мир', letter:'О', category:'Общий',
+    definition:'Игра с большим свободным миром, где можно идти куда хочешь и делать что хочешь, не следуя строгому маршруту.',
+    example:'"В этой игре полный опенворлд — можно исследовать несколько лет."',
+    games:['GTA 5','The Elder Scrolls','Red Dead Redemption 2','Elden Ring'],
+    origin:'Прямой перевод английского "open world".' },
+
+  // П
+  { term:'Патч / Апдейт', letter:'П', category:'Общий',
+    definition:'Обновление игры от разработчиков: исправление ошибок, изменение баланса, добавление нового контента.',
+    example:'"После патча игра стала работать намного стабильнее."',
+    games:['Все игры с обновлениями'],
+    origin:'От английского "patch" — заплатка, латка.' },
+
+  { term:'Пинг', letter:'П', category:'Онлайн',
+    definition:'Скорость соединения между вашим компьютером и сервером, измеряется в миллисекундах. Чем ниже пинг — тем лучше. Высокий пинг = лаги.',
+    example:'"У меня пинг 200 — всё дёргается, нормально не сыграть."',
+    games:['Все онлайн-игры'],
+    origin:'Технический термин — звуковой сигнал эхолота, который "пингует" и ждёт ответа.' },
+
+  { term:'ПвП / PvP', letter:'П', category:'Мультиплеер',
+    definition:'Player vs Player — игрок против игрока. Режим, в котором вы сражаетесь с живыми людьми, а не с компьютером.',
+    example:'"Сегодня иду в ПвП — хочу проверить свой билд в бою с реальными игроками."',
+    games:['World of Warcraft','Dark Souls','Dota 2','Battlefield'],
+    origin:'Аббревиатура от английского "Player vs Player".' },
+
+  { term:'ПвЕ / PvE', letter:'П', category:'Мультиплеер',
+    definition:'Player vs Environment — игрок против окружения (компьютерных врагов). Вместе с командой против монстров и боссов.',
+    example:'"Сегодня только ПвЕ — рейд на нового босса."',
+    games:['World of Warcraft','Destiny 2','Monster Hunter'],
+    origin:'Аббревиатура от английского "Player vs Environment".' },
+
+  { term:'Прок / Проц', letter:'П', category:'РПГ',
+    definition:'Случайное срабатывание особого эффекта с определённой вероятностью. Например, оружие с "10% шансом отравить" — прокает с вероятностью 1 из 10.',
+    example:'"Кольцо прокнуло! Моментальная смерть противника."',
+    games:['World of Warcraft','Diablo','Path of Exile','Dota 2'],
+    origin:'От английского "proc" — сокращение от "programmed random occurrence" или "process".' },
+
+  // Р
+  { term:'Рейд', letter:'Р', category:'РПГ',
+    definition:'Крупный совместный поход большой группы игроков против очень сильных боссов. Требует координации и хорошего снаряжения.',
+    example:'"Рейд на 25 человек начинается в 20:00 — всем быть онлайн!"',
+    games:['World of Warcraft','Destiny 2','Final Fantasy XIV'],
+    origin:'От английского "raid" — военный налёт, набег.' },
+
+  { term:'Респавн / Спавн', letter:'Р', category:'Общий',
+    definition:'Появление персонажа или врагов в игре. Когда вас убили и вы "воскресли" — это респавн. Спавн — место или момент появления.',
+    example:'"Меня убили — жди, пока респавнюсь."',
+    games:['Все мультиплеерные игры'],
+    origin:'От английского "respawn" — повторное появление.' },
+
+  { term:'РПГ / RPG', letter:'Р', category:'Жанр',
+    definition:'Role-Playing Game — ролевая игра. Жанр игр, где вы развиваете персонажа, прокачиваете навыки и следуете сюжету.',
+    example:'"The Witcher 3 — лучшее РПГ последних лет."',
+    games:['The Witcher 3','Skyrim','Baldur\'s Gate 3','Dark Souls'],
+    origin:'Возник в настольных играх — Dungeons & Dragons.' },
+
+  // С
+  { term:'Скилл / Скилл-шот', letter:'С', category:'Общий',
+    definition:'Умение, способность персонажа. Скилл-шот — атака, которую нужно точно прицелить по движущемуся врагу.',
+    example:'"Попасть скилл-шотом по такому быстрому врагу — это чистый скилл."',
+    games:['League of Legends','Dota 2','Overwatch'],
+    origin:'От английского "skill" — навык, умение.' },
+
+  { term:'Сквад', letter:'С', category:'Мультиплеер',
+    definition:'Небольшая группа игроков, которые играют вместе. Обычно от 2 до 5 человек.',
+    example:'"Заходи в сквад — нам одного не хватает для полной команды."',
+    games:['PUBG','Fortnite','Call of Duty','Battlefield'],
+    origin:'От английского "squad" — отряд, группа.' },
+
+  { term:'Спидран', letter:'С', category:'Общий',
+    definition:'Прохождение игры как можно быстрее. Спидраннеры ищут кратчайшие пути, баги и хитрости, чтобы побить рекорд скорости.',
+    example:'"Этот игрок прошёл Dark Souls за 20 минут — невероятный спидран!"',
+    games:['Super Mario','Dark Souls','The Legend of Zelda','Doom'],
+    origin:'От английского "speedrun" — быстрый забег.' },
+
+  // Т
+  { term:'Танк', letter:'Т', category:'РПГ',
+    definition:'Персонаж с огромным запасом здоровья и защиты. Его задача — принимать урон на себя, пока союзники атакуют издалека.',
+    example:'"Я буду танком — идите за мной, буду прикрывать."',
+    games:['World of Warcraft','League of Legends','Final Fantasy XIV','Overwatch'],
+    origin:'По аналогии с военным танком — бронированной машиной, принимающей удары.' },
+
+  { term:'Тилт', letter:'Т', category:'Психология',
+    definition:'Эмоциональное состояние, когда игрок расстроен, злится и начинает играть хуже из-за этого. Термин пришёл из покера.',
+    example:'"После трёх поражений подряд я ушёл в тилт — надо сделать перерыв."',
+    games:['League of Legends','Dota 2','CS:GO','Hearthstone'],
+    origin:'Из покера — "tilted" (наклонился) означал потерю контроля от эмоций.' },
+
+  { term:'Токсик / Токсичность', letter:'Т', category:'Мультиплеер',
+    definition:'Игрок, который ведёт себя грубо, оскорбляет союзников и портит атмосферу в команде.',
+    example:'"Этот игрок токсичит в чате — лучше заблокируй его."',
+    games:['League of Legends','CS:GO','Dota 2','Overwatch'],
+    origin:'От английского "toxic" — ядовитый, вредный.' },
+
+  // У
+  { term:'Ульта / Ультимейт', letter:'У', category:'Общий',
+    definition:'Самая мощная способность персонажа с длительным кулдауном. Обычно решает исход боя, если применена правильно.',
+    example:'"Берегите ульту для финального сражения — не тратьте зря!"',
+    games:['League of Legends','Overwatch','Dota 2','Valorant'],
+    origin:'От английского "ultimate" — высший, финальный.' },
+
+  // Ф
+  { term:'Фарм', letter:'Ф', category:'РПГ',
+    definition:'Методичный сбор ресурсов, опыта или золота путём повторения одних и тех же действий. Похоже на гринд, но фарм целенаправленнее.',
+    example:'"Иду фармить золото — надо накопить на новую броню."',
+    games:['World of Warcraft','Diablo','Dota 2','Path of Exile'],
+    origin:'По аналогии с сельскохозяйственным фермерством — монотонный труд ради урожая.' },
+
+  { term:'Флекс', letter:'Ф', category:'Мультиплеер',
+    definition:'Гибкая роль — игрок, умеющий играть на разных позициях. Также означает "хвастаться" достижениями.',
+    example:'"Я флекс — могу играть и поддержку, и урон."',
+    games:['League of Legends','Overwatch','Valorant'],
+    origin:'От английского "flex" — гибкий, сгибаться; хвастаться мышцами.' },
+
+  { term:'Фраг', letter:'Ф', category:'Шутер',
+    definition:'Убийство противника в игре. Считать фраги — значит считать свои убийства за матч.',
+    example:'"20 фрагов за матч — отличный результат!"',
+    games:['CS:GO','Quake','Call of Duty','Valorant'],
+    origin:'От английского "frag" — осколочная граната. Восходит к играм Quake и Doom.' },
+
+  // Х
+  { term:'Хайп', letter:'Х', category:'Общий',
+    definition:'Сильное ажиотажное ожидание новой игры или события. Когда все вокруг обсуждают что-то с огромным энтузиазмом.',
+    example:'"Хайп вокруг этой игры огромный — не терпится попробовать."',
+    games:['Elden Ring','Cyberpunk 2077','GTA 6'],
+    origin:'От английского "hype" — шумиха, ажиотаж.' },
+
+  { term:'Хардкор', letter:'Х', category:'Режим',
+    definition:'Режим игры с максимальной сложностью, часто с постоянной смертью: если умер — начинай сначала. Только для опытных игроков.',
+    example:'"Я прохожу хардкор — умер на 50-м часу, потерял всё. Разочарован."',
+    games:['Diablo 4','Path of Exile','Dead Cells','Hades'],
+    origin:'От английского "hardcore" — жёсткий, без компромиссов.' },
+
+  // Ч
+  { term:'Чит / Хак', letter:'Ч', category:'Нечестная игра',
+    definition:'Программа или приём, дающий нечестное преимущество: видеть сквозь стены, стрелять без промаха, двигаться быстрее всех.',
+    example:'"Его забанили за читы — автоприцел засекли на сервере."',
+    games:['CS:GO','PUBG','Valorant','Fortnite'],
+    origin:'От английского "cheat" — жульничать, обманывать.' },
+
+  // Э
+  { term:'Эндгейм', letter:'Э', category:'РПГ',
+    definition:'Финальный контент игры, который открывается после прохождения основной истории. Обычно самое сложное и самое интересное.',
+    example:'"Основной сюжет прошёл за 40 часов, но эндгейм у меня займёт ещё 200."',
+    games:['Diablo 4','Path of Exile','World of Warcraft','Destiny 2'],
+    origin:'От английского "endgame" — финальная стадия партии (из шахмат).' },
+
+  // Ю
+  { term:'Юзер / Юзать', letter:'Ю', category:'Общий',
+    definition:'Пользоваться чем-то. "Юзать абилку" — значит использовать способность. Иногда с негативным смысловым оттенком (использовать что-то сломанное).',
+    example:'"Юзай лечилку быстрее — ты почти мёртв!"',
+    games:['Все игры'],
+    origin:'От английского "use" — использовать.' },
+];
+
+// ══════════════════════════════════════════════════════════════
+//  РЕНДЕР
+// ══════════════════════════════════════════════════════════════
+updateThemeBtn();
+
+let activeAlpha = '';
+
+function renderSlang() {
+  const q   = (document.getElementById('slang-search')?.value || '').toLowerCase().trim();
+  const main = document.getElementById('slang-main');
+
+  // Фильтрация
+  let items = SLANG;
+  if (q)          items = items.filter(s =>
+    s.term.toLowerCase().includes(q) ||
+    s.definition.toLowerCase().includes(q) ||
+    (s.games||[]).some(g => g.toLowerCase().includes(q))
+  );
+  if (activeAlpha) items = items.filter(s => s.letter === activeAlpha);
+
+  // Обновить счётчик
+  document.getElementById('slang-counter').textContent = `${items.length} ${plural(items.length,'термин','термина','терминов')} в словаре`;
+
+  if (!items.length) {
+    main.innerHTML = `<div class="slang-empty"><span class="big">🔍</span><h3>Ничего не найдено</h3><p>Попробуйте другой запрос или выберите другую букву.</p></div>`;
+    return;
+  }
+
+  // Группировка по буквам
+  const grouped = {};
+  items.forEach(s => {
+    const l = s.letter || s.term[0].toUpperCase();
+    if (!grouped[l]) grouped[l] = [];
+    grouped[l].push(s);
+  });
+
+  main.innerHTML = Object.keys(grouped).sort().map(letter => `
+    <div class="slang-letter-group" id="letter-${letter}">
+      <div class="slang-letter-header">
+        ${letter}
+        <span>${grouped[letter].length} ${plural(grouped[letter].length,'термин','термина','терминов')}</span>
+      </div>
+      ${grouped[letter].map(s => `
+        <div class="slang-card reveal">
+          <div class="slang-card-head">
+            <div class="slang-term">${esc(s.term)}</div>
+            <div class="slang-category">${esc(s.category)}</div>
+          </div>
+          <div class="slang-definition">${esc(s.definition)}</div>
+          ${s.example ? `<div class="slang-example">${esc(s.example)}</div>` : ''}
+          ${s.games?.length ? `
+            <div class="slang-games">
+              <span style="font-size:11px;color:var(--muted);font-weight:600;">Встречается в: </span>
+              ${s.games.map(g => `<span class="slang-game-tag">${esc(g)}</span>`).join('')}
+            </div>` : ''}
+          ${s.origin ? `<div class="slang-origin">📜 ${esc(s.origin)}</div>` : ''}
+        </div>`).join('')}
+    </div>`).join('');
+
+  // Перезапустить reveal для новых элементов
+  initScrollReveal();
+}
+
+function renderAlphaNav() {
+  const letters = [...new Set(SLANG.map(s => s.letter || s.term[0].toUpperCase()))].sort();
+  const all = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЭЮЯ'.split('');
+  const nav = document.getElementById('alpha-nav');
+  nav.innerHTML = `<button class="alpha-btn active ${!activeAlpha?'active':''}" onclick="setAlpha('')">Все</button>` +
+    all.map(l => {
+      const has = letters.includes(l);
+      return `<button class="alpha-btn ${has?'has-terms':''} ${activeAlpha===l?'active':''}" onclick="setAlpha('${l}')">${l}</button>`;
+    }).join('');
+}
+
+function setAlpha(l) {
+  activeAlpha = l;
+  renderAlphaNav();
+  renderSlang();
+}
+
+function plural(n, one, few, many) {
+  const abs = Math.abs(n) % 100;
+  const mod = abs % 10;
+  if (abs > 10 && abs < 20) return many;
+  if (mod > 1 && mod < 5) return few;
+  if (mod === 1) return one;
+  return many;
+}
+
+// Init
+renderAlphaNav();
+renderSlang();
+</script>
+</body>
+</html>
